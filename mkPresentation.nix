@@ -24,11 +24,11 @@ pkgs.stdenv.mkDerivation rec {
   buildInputs = with pkgs; [ pandoc ] ++ extraBuildInputs;
 
   installPhase = ''
-    mkdir $out
     for presentation in $(find . -name "*\.md"); do
-      id=$(basename $presentation ".md")
-      pandoc -t revealjs -s -o $out/"$id".html "$id".md
+      id="$(basename "$presentation" ".md")"
+      path="$(dirname "$presentation")"
+      mkdir -p "$out/$path"
+      pandoc --to=revealjs --variable revealjs-url=${revealJS} --resource-path="$path" --standalone --out="$out/$path/$id.html" "$presentation"
     done
-    ln -s ${revealJS} $out/reveal.js
   '';
 }
