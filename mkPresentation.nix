@@ -5,30 +5,34 @@
 , src
 , name
 , revealVersion ? "3.7.0"
+, selfContained ? false
   # extra dependencies
- ,extraBuildInputs ? []
+, extraBuildInputs ? []
   # assets to include in the result packages, typically examples
- ,assets ? []
+, assets ? []
 }:
 let
   revealJS = fetchTarball "https://github.com/hakimel/reveal.js/archive/${revealVersion}.tar.gz";
 in
 
-pkgs.stdenv.mkDerivation rec {
+with pkgs;
+with pkgs.lib;
+
+stdenv.mkDerivation rec {
   inherit name src;
 
   preferLocalBuild = true;
   allowSubstitutes = false;
 
   # dependencies declaration
-  buildInputs = with pkgs; [ pandoc ] ++ extraBuildInputs;
+  buildInputs = [ pandoc ] ++ extraBuildInputs;
 
   installPhase = ''
     for presentation in $(find . -name "*\.md"); do
       id="$(basename "$presentation" ".md")"
       path="$(dirname "$presentation")"
       mkdir -p "$out/$path"
-      pandoc --to=revealjs --variable revealjs-url=${revealJS} --resource-path="$path" --standalone --out="$out/$path/$id.html" "$presentation"
+      pandoc --to=revealjs --variable revealjs-url=${revealJS} --resource-path="$src/$path" --standalone ${optionalString selfContained "--self-contained"} --out="$out/$path/$id.html" "$presentation"
     done
   '';
 }
