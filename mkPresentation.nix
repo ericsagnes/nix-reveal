@@ -8,8 +8,6 @@
 , selfContained ? false
   # extra dependencies
 , extraBuildInputs ? []
-  # assets to include in the result packages, typically examples
-, assets ? []
 }:
 let
   revealJS = fetchTarball "https://github.com/hakimel/reveal.js/archive/${revealVersion}.tar.gz";
