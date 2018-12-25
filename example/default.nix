@@ -8,4 +8,7 @@ with pkgs.lib;
   # reveal version can be changed with revealJS
   # 3.7.0 is used by default
   revealVersion = "3.4.0";
+  extraPandocVariables = {
+    theme = "sky";
+  };
 }

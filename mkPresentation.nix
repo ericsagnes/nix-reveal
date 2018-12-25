@@ -8,13 +8,18 @@
 , selfContained ? false
   # extra dependencies
 , extraBuildInputs ? []
+, extraPandocVariables ? {}
 }:
-let
-  revealJS = fetchTarball "https://github.com/hakimel/reveal.js/archive/${revealVersion}.tar.gz";
-in
 
 with pkgs;
 with pkgs.lib;
+
+let
+  revealJS = fetchTarball "https://github.com/hakimel/reveal.js/archive/${revealVersion}.tar.gz";
+
+  extraVars = vars:
+    builtins.concatStringsSep "" (mapAttrsToList (name: value: "--variable " + name + "=" + value) vars);
+in
 
 stdenv.mkDerivation rec {
   inherit name src;
@@ -30,7 +35,7 @@ stdenv.mkDerivation rec {
       id="$(basename "$presentation" ".md")"
       path="$(dirname "$presentation")"
       mkdir -p "$out/$path"
-      pandoc --to=revealjs --variable revealjs-url=${revealJS} --resource-path="$src/$path" --standalone ${optionalString selfContained "--self-contained"} --out="$out/$path/$id.html" "$presentation"
+      pandoc --to=revealjs --variable revealjs-url=${revealJS} ${extraVars extraPandocVariables} --resource-path="$src/$path" --standalone ${optionalString selfContained "--self-contained"} --out="$out/$path/$id.html" "$presentation"
     done
   '';
 }
