@@ -4,7 +4,7 @@
   pkgs
 , src
 , name
-, revealVersion ? "3.5.0"
+, revealVersion ? "3.7.0"
   # extra dependencies
  ,extraBuildInputs ? []
   # assets to include in the result packages, typically examples
