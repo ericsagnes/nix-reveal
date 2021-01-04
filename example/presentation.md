@@ -1,12 +1,16 @@
 ---
 author: John Doe
 title: Demo Slide
-date: June 21, 2017
+date: 2021-01-04
 ---
-# Foo
+
+## Foo
+
 ```python
 print("hello world")
 ```
-# Bar
+
+### Bar
+
 * test
 * test
